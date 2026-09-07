@@ -250,7 +250,7 @@
 
         function updateVisitorCounter() {
             let count = localStorage.getItem('dartVisitorCount');
-            if (!count) count = 1420; 
+            if (!count) count = 0; 
             count = parseInt(count) + 1;
             localStorage.setItem('dartVisitorCount', count);
             document.getElementById('visitCountDisplay').innerText = String(count).padStart(6, '0');
