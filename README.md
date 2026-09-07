@@ -19,7 +19,7 @@ Each daily folder must include a `metadata.json` file containing:
 * Associated uncertainty values designated by an `_err` suffix (e.g., `Dispersion_Measure_err`).
 * Array data for `Profile_bins`, `I`, `Q`, `U`, and `V`.
 
-[![Preview](doc/GBD-DART_Intranet_Archive.png)](docs/GBD-DART_Intranet_Archive.pdf)
+[![Preview](doc/GBD-DART_Intranet_Archive.png)](doc/GBD-DART_Intranet_Archive.pdf)
 
 ## Setup Instructions
 1. Clone this repository to your local observatory node.
