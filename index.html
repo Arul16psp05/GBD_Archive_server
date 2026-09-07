@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GBD-DART Intranet Archive</title>
+    <!-- Include Plotly.js for the Overview Plot -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <style>
+        /* Dark Theme for Astrophysics */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; margin: 0; padding: 0; color: #e2e8f0; background-color: #0b0f19; }
+        
+        /* Header */
+        header { background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%); border-bottom: 3px solid #38bdf8; color: #fff; padding: 2rem 5%; display: flex; align-items: center; justify-content: space-between; }
+        .header-center { text-align: center; flex-grow: 1; }
+        header h1 { margin: 0; font-size: 2.5rem; letter-spacing: 1px; }
+        header p { margin: 10px 0 0 0; font-size: 1.1rem; color: #94a3b8; }
+        .header-logo { width: 80px; height: 80px; background-color: #1e293b; border: 2px dashed #475569; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 0.75rem; text-align: center; font-weight: bold; flex-shrink: 0; overflow: hidden; }
+        .header-logo img { width: 100%; height: 100%; object-fit: contain; }
+        
+        /* Nav */
+        nav { background-color: #0f172a; display: flex; justify-content: center; padding: 15px 0; border-bottom: 1px solid #1e293b; }
+        nav a { color: #e2e8f0; text-decoration: none; margin: 0 15px; font-weight: bold; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px; transition: color 0.3s ease; }
+        nav a:hover { color: #38bdf8; }
+        
+        /* Container & Layout */
+        .container { max-width: 1400px; margin: 30px auto; padding: 30px; background: #1e293b; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        h2 { color: #38bdf8; border-bottom: 1px solid #334155; padding-bottom: 10px; margin-top: 0; font-size: 1.4rem; }
+        .split-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 40px; margin-top: 20px; }
+        .panel { background-color: #0f172a; padding: 25px; border: 1px solid #334155; border-radius: 8px; display: flex; flex-direction: column; }
+        .panel p { color: #cbd5e1; font-size: 0.95rem; }
+        .panel ul { color: #cbd5e1; font-size: 0.95rem; padding-left: 20px; }
+        .panel li { margin-bottom: 10px; }
+        
+        .citation-box { background-color: #0b0f19; border-left: 4px solid #38bdf8; padding: 15px; margin-top: auto; font-size: 0.9rem; color: #cbd5e1; border-radius: 0 4px 4px 0; }
+        
+        .image-placeholder { width: 100%; height: 650px; background-color: #1e293b; border: 1px dashed #475569; border-radius: 5px; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 0.9rem; font-weight: bold; margin-bottom: 15px; text-align: center; padding: 1px; box-sizing: border-box; }
+
+        /* Calendar Styles */
+        .calendar-controls { display: flex; justify-content: space-between; align-items: center; background: #1e293b; padding: 10px; border-radius: 6px 6px 0 0; border: 1px solid #334155; border-bottom: none; margin-top: 10px; }
+        .calendar-controls button, .calendar-controls select { background: #4f46e5; color: white; border: none; padding: 6px 8px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.8rem; }
+        .calendar-controls button:hover { background: #4338ca; }
+        .calendar-controls h3 { margin: 0; color: #38bdf8; font-size: 0.95rem; }
+        
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; background: #1e293b; padding: 10px; border: 1px solid #334155; border-radius: 0 0 6px 6px; }
+        .calendar-day-header { text-align: center; font-weight: bold; color: #818cf8; padding-bottom: 8px; font-size: 0.8rem; }
+        .calendar-day { background: #0f172a; border: 1px solid #334155; border-radius: 4px; padding: 6px 2px; text-align: center; cursor: pointer; transition: all 0.2s; color: #cbd5e1; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 48px; }
+        .calendar-day:hover { background: #38bdf8; color: #000; border-color: #38bdf8; }
+        .calendar-day.empty { background: transparent; border: none; cursor: default; }
+        .calendar-day.selected { background: #38bdf8; color: #000; border-color: #38bdf8; }
+        .day-num { font-weight: bold; font-size: 0.9rem; }
+        .mjd-num { font-size: 0.55rem; color: #94a3b8; font-family: monospace; margin: 2px 0; }
+        .calendar-day.selected .mjd-num, .calendar-day:hover .mjd-num { color: #1e293b; }
+
+        .status-dot { width: 6px; height: 6px; border-radius: 50%; margin-top: 3px; background-color: #475569; transition: background-color 0.3s; }
+        .status-dot.available { background-color: #10b981; box-shadow: 0 0 5px #10b981; }
+        .status-dot.unavailable { background-color: #ef4444; box-shadow: 0 0 5px #ef4444; }
+        .status-dot.offline { background-color: #f59e0b; box-shadow: 0 0 5px #f59e0b; }
+
+        .calendar-legend { display: flex; justify-content: center; gap: 10px; margin-top: 15px; font-size: 0.75rem; color: #cbd5e1; flex-wrap: wrap; }
+        .legend-item { display: flex; align-items: center; gap: 4px; }
+        .legend-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+        /* Preview Panel Styles */
+        .preview-panel { margin-top: 25px; padding-top: 20px; border-top: 1px solid #334155; text-align: center; }
+        .preview-placeholder { color: #64748b; font-style: italic; font-size: 0.85rem; padding: 15px; border: 2px dashed #334155; border-radius: 6px; }
+        .preview-panel h3 { color: #818cf8; font-size: 1rem; margin-top: 0; margin-bottom: 12px; white-space: pre-line; }
+        .preview-image { width: 100%; border-radius: 6px; border: 1px solid #475569; margin-bottom: 15px; background-color: #1e293b; display: none; }
+        .dynamic-files { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
+        
+        .btn { display: inline-block; background: #4f46e5; color: #fff; padding: 8px 12px; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 0.8rem; transition: background 0.3s ease; width: 100%; box-sizing: border-box; cursor: pointer; border: none; }
+        .btn:hover { background: #4338ca; }
+        .btn-secondary { background: #475569; margin-top: 10px; }
+        .btn-secondary:hover { background: #334155; }
+
+        .alert-box { background-color: #022c22; border-left: 4px solid #10b981; padding: 15px; margin-bottom: 25px; color: #d1fae5; font-size: 0.95rem; }
+        .alert-box.offline-banner { background-color: #451a03; border-left: 4px solid #f59e0b; color: #fde68a; display: none; }
+        
+        footer { text-align: center; padding: 30px; background-color: #0b0f19; color: #64748b; margin-top: 40px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+
+        .visitor-counter { background: #1e293b; border: 1px solid #334155; padding: 8px 15px; border-radius: 6px; font-family: 'Courier New', Courier, monospace; display: inline-flex; align-items: center; gap: 10px; color: #94a3b8; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5); }
+        .counter-digits { background: #000; color: #38bdf8; padding: 4px 8px; border-radius: 3px; font-weight: bold; font-size: 1.1rem; letter-spacing: 2px; }
+
+        .metadata-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 0.85rem; text-align: left; background-color: #1e293b; border-radius: 6px; overflow: hidden; }
+        .metadata-table th, .metadata-table td { padding: 8px 12px; border-bottom: 1px solid #334155; }
+        .metadata-table th { background-color: #0b0f19; color: #38bdf8; font-weight: bold; width: 40%; }
+        .metadata-table tr:last-child td, .metadata-table tr:last-child th { border-bottom: none; }
+
+        /* Error Filter Slider Layout */
+        .trend-controls { display: none; justify-content: center; gap: 20px; margin-bottom: 15px; align-items: center; flex-wrap: wrap; }
+        .filter-container { display: none; align-items: center; gap: 10px; background: #1e293b; padding: 6px 12px; border-radius: 4px; border: 1px solid #334155; }
+
+        @media (max-width: 950px) {
+            .split-layout { grid-template-columns: 1fr; }
+            header { flex-direction: column; gap: 15px; }
+            .header-logo { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-logo"><img src="images/gbd-dart_logo.png" alt="Institute 1" style="background:white;"></div>
+        <div class="header-center">
+            <h1>GBD-DART Data Archive</h1>
+            <p>Pulsar polarization data</p>
+        </div>
+        <div class="header-logo"><img src="images/rri_logo.png" alt="Institute 2" style="background:white;"></div>
+    </header>
+
+    <nav>
+        <a href="#dashboard">Dashboard</a>
+        <a href="#contact">Contact</a>
+    </nav>
+
+    <div class="container">
+        
+        <div class="alert-box" id="onlineBanner">
+            <strong>Network Status:</strong> You are connected to the local observatory network. Downloads are unmetered.
+        </div>
+        <div class="alert-box offline-banner" id="offlineBanner">
+            <strong>Server Disconnected:</strong> Cannot verify local data availability. The archive server may be offline.
+        </div>
+
+        <div class="split-layout" id="dashboard">
+            <div class="panel">
+                <div class="image-placeholder">
+                    <img src="images/GBD-DART_array.jpg" alt="GBD-DART Checkerboard Array" style="width: 100%; border-radius: 6px; margin-bottom: 20px;">
+                </div>
+                <h2>About GBD-DART</h2>
+                <p> The <strong>Gauribidanur Diamond Array Radio Telescope (GBD-DART</strong>) is a new, low-frequency radio antenna array with 64 log-periodic dipole array (LPDA) and associated receivers, developed and deployed at the Gauribidanur observatory (13.604 N, 77.427 E). It studies bright pulsars and solar transients in the frequency range of 130–350 MHz. The LPDAs are arranged in a checkerboard pattern. The orthogonal polarisation feeds are formed using pairs of opposite LPDAs. A diamond-shaped (tilted square) array configuration was chosen for high sidelobe suppression in the East-West and North-South directions. The tile measures 5.9 by 5.9 m, with diagonals along North-South and East-West directions, each about 8.3 m. The tile operates as a phased array in transit-observing mode and has been successfully detecting strong pulsars and solar flares for eleven months. The current instantaneous observation bandwidth is 16 MHz, limited by the present digital backend. Array operations are streamlined for remote use. In addition to its scientific role, the system serves as a training platform for radio astronomy using a simple, low-cost telescope.</p>
+                <p> Presently, the pipeline is configured to observe pulsars between 170 and 196 MHz, with a daily cadence. Recorded data are reduced in-line immediately following each observation, nearly matching the observation time at a 1:1 ratio. The archives are routinely backed up to a remote system via the internet. The paper presents the architecture of the signal-processing pipeline developed, its validation, and initial polarimetric results for five bright pulsars at 175 MHz. Results also include dispersion measure (DM), rotation measure (RM) estimates and single-pulse study results, as well as from monitoring the spin-down of the Crab pulsar over 200 days of observation </p>
+                <ul>
+                    <li><strong>Location:</strong> Gauribidanur observatory (13.604 N, 77.427 E).</li>
+                    <li><strong>Antenna Array:</strong> 64-dipole LPDA arranged in a diamond-shaped checkerboard layout.</li>
+                    <li><strong>Frequency Range:</strong> Operations cover the 130–350 MHz band.</li>
+                    <li><strong>Backend Specs:</strong> Features a dual-polarised digital backend with a 16 MHz instantaneous bandwidth.</li>
+                </ul>
+                <p>This internal node hosts the uncalibrated baseband files, folded <code>.ar</code> profiles, and dynamic spectra generated daily by the array.</p>
+                
+                <div class="citation-box">
+                    <strong>Data Citation:</strong><br>
+                    If you use data or code from this archive, we request that you cite the foundational commissioning paper:<br><br>
+                    <em>GBD-DART-I : Pulsars and transient source detections</em><br>
+                    A. Pandian B., J. Bagchi, P. Thiagaraj, et al. (2026).<br>
+                    Publications of the Astronomical Society of Australia (PASA).<br>
+                    DOI: <a href="https://doi.org/10.1017/pasa.2026.10231" style="color: #38bdf8;">10.1017/pasa.2026.10231</a>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2>Archive Calendar</h2>
+                <p style="font-size: 0.85rem;">Select an observation date below.</p>
+                
+                <div class="calendar-controls">
+                    <button onclick="changeMonth(-1)">&#8592;</button>
+                    <h3 id="monthYearDisplay">Sep 2026</h3>
+                    <select id="datasetSelector" style="width: auto;">
+                        <option value="J0534+2200">J0534+2200</option>
+                        <option value="J0837+0610">J0837+0610</option>
+                        <option value="J0953+0755">J0953+0755</option>
+                        <option value="J1136+1551">J1136+1551</option>
+                        <option value="J1921+2153">J1921+2153</option>
+                    </select>
+                    <button onclick="changeMonth(1)">&#8594;</button>
+                </div>
+                
+                <div class="calendar-grid" id="calendarGrid"></div>
+
+                <div class="calendar-legend">
+                    <div class="legend-item"><div class="legend-dot" style="background: #10b981;"></div> Available</div>
+                    <div class="legend-item"><div class="legend-dot" style="background: #ef4444;"></div> No Data</div>
+                    <div class="legend-item"><div class="legend-dot" style="background: #f59e0b;"></div> Offline</div>
+                </div>
+
+                <div class="preview-panel">
+                    <div id="previewPlaceholder" class="preview-placeholder">Select an available date to retrieve data.</div>
+
+                    <div id="previewActive" style="display: none;">
+                        <h3 id="previewTitle">Observation Data</h3>
+                        
+                        <table class="metadata-table"><tbody id="metadataBody"></tbody></table>
+                        
+                        <div id="interactivePlot" style="width: 100%; height: 280px; background-color: #1e293b; border-radius: 6px; border: 1px solid #475569; margin-bottom: 15px; display: none;"></div>
+
+                        <img id="previewImage" src="" alt="Dynamic Spectrum Preview" class="preview-image">
+                        <div id="dynamicFileLinks" class="dynamic-files"></div>
+                        <a id="browseBtn" href="#" class="btn btn-secondary" target="_blank">Browse Raw Folder</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- OVERVIEW PLOT SECTION WITH FILTERS -->
+        <div class="panel" style="margin-top: 30px;" id="overview-plot-section">
+            <h2>All-Time Metadata Trends</h2>
+            <p style="text-align: center; color: #94a3b8; font-size: 0.85rem; margin-top: 0; margin-bottom: 20px;">
+                Scans the entire local archive for the selected pulsar to plot variables over time.
+            </p>
+
+            <div class="trend-controls" id="trendControls">
+                <div>
+                    <label for="trendVariable" style="color: #94a3b8; font-size: 0.9rem;">Select Variable:</label>
+                    <select id="trendVariable" style="background: #1e293b; color: #fff; border: 1px solid #38bdf8; padding: 6px; border-radius: 4px; font-weight: bold;"></select>
+                </div>
+                
+                <!-- Min SNR Filter -->
+                <div class="filter-container" id="snrFilterContainer">
+                    <label for="snrSlider" style="color: #94a3b8; font-size: 0.9rem;">Min SNR:</label>
+                    <input type="range" id="snrSlider" oninput="updateSliderLabels(); plotTrend();" style="cursor: pointer; accent-color: #10b981;">
+                    <span id="snrSliderValue" style="color: #10b981; font-weight: bold; font-size: 0.9rem; min-width: 40px; text-align: right;"></span>
+                </div>
+
+                <!-- Max Error Filter -->
+                <div class="filter-container" id="errorFilterContainer">
+                    <label for="errorSlider" style="color: #94a3b8; font-size: 0.9rem;">Max Error:</label>
+                    <input type="range" id="errorSlider" oninput="updateSliderLabels(); plotTrend();" style="cursor: pointer; accent-color: #f59e0b;">
+                    <span id="errorSliderValue" style="color: #f59e0b; font-weight: bold; font-size: 0.9rem; min-width: 55px; text-align: right;"></span>
+                </div>
+            </div>
+            
+            <div id="overviewPlot" style="width: 100%; height: 450px; display: none;"></div>
+            
+            <div id="plotLoading" style="text-align: center; padding: 20px;">
+                <button class="btn" onclick="loadAllTimeTrends()" id="trendsBtn" style="width: 250px; background: #10b981;">Load All-Time Plot</button>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <div class="visitor-counter">
+            <span>VISITS</span>
+            <span id="visitCountDisplay" class="counter-digits">000000</span>
+        </div>
+        <p>&copy; 2026 GBD-DART Project. Raman Research Institute, Bangalore.</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // PARENT DIRECTORY CONSTANT
+        // Change this string to match your data mount point (e.g., "data/", "archive/")
+        const PARENT_DIR = "pulsar_data/";
+
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        let currentDate = new Date(); 
+        let currentMonth = currentDate.getMonth();
+        let currentYear = currentDate.getFullYear();
+
+        function updateVisitorCounter() {
+            let count = localStorage.getItem('dartVisitorCount');
+            if (!count) count = 1420; 
+            count = parseInt(count) + 1;
+            localStorage.setItem('dartVisitorCount', count);
+            document.getElementById('visitCountDisplay').innerText = String(count).padStart(6, '0');
+        }
+        updateVisitorCounter();
+
+        function getMJD(year, month, day) {
+            const utcTime = Date.UTC(year, month, day);
+            const istTime = utcTime - (5.5 * 60 * 60 * 1000);
+            return ((istTime / 86400000) + 40587.0).toFixed(0);
+        }
+
+        document.getElementById("datasetSelector").addEventListener("change", () => {
+            resetPreviewPanel();
+            resetOverviewPlot();
+            renderCalendar(currentMonth, currentYear);
+        });
+
+        function resetPreviewPanel() {
+            document.getElementById("previewActive").style.display = 'none';
+            document.getElementById("previewPlaceholder").style.display = 'block';
+            document.getElementById("dynamicFileLinks").innerHTML = '';
+            document.getElementById("interactivePlot").style.display = 'none';
+        }
+        
+        function resetOverviewPlot() {
+            document.getElementById('overviewPlot').style.display = 'none';
+            document.getElementById('trendControls').style.display = 'none';
+            
+            const existingStatus = document.getElementById("crawlStatus");
+            if(existingStatus) existingStatus.remove();
+
+            document.getElementById('plotLoading').style.display = 'block';
+            document.getElementById("trendsBtn").style.display = 'inline-block';
+            document.getElementById("trendsBtn").innerText = "Load All-Time Plot";
+        }
+
+        function renderCalendar(month, year) {
+            const grid = document.getElementById("calendarGrid");
+            const display = document.getElementById("monthYearDisplay");
+            const dataset = document.getElementById("datasetSelector").value;
+            
+            document.getElementById("offlineBanner").style.display = 'none';
+            document.getElementById("onlineBanner").style.display = 'block';
+
+            grid.innerHTML = "";
+            display.innerText = `${monthNames[month]} ${year}`;
+
+            const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+            daysOfWeek.forEach(day => {
+                const dayHeader = document.createElement("div");
+                dayHeader.className = "calendar-day-header";
+                dayHeader.innerText = day;
+                grid.appendChild(dayHeader);
+            });
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            for (let i = 0; i < firstDay; i++) {
+                const emptyDiv = document.createElement("div");
+                emptyDiv.className = "calendar-day empty";
+                grid.appendChild(emptyDiv);
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayDiv = document.createElement("div");
+                dayDiv.className = "calendar-day";
+                dayDiv.id = `day-${day}`; 
+                
+                const dayText = document.createElement("span");
+                dayText.className = "day-num";
+                dayText.innerText = day;
+                dayDiv.appendChild(dayText);
+                
+                const mjdText = document.createElement("span");
+                mjdText.className = "mjd-num";
+                mjdText.innerText = getMJD(year, month, day);
+                dayDiv.appendChild(mjdText);
+                
+                const statusDot = document.createElement("div");
+                statusDot.className = "status-dot";
+                dayDiv.appendChild(statusDot);
+
+                dayDiv.onclick = () => selectDate(year, month, day, dayDiv);
+                grid.appendChild(dayDiv);
+
+                checkDataAvailability(dataset, year, month, day, statusDot);
+            }
+        }
+
+        function checkDataAvailability(dataset, year, month, day, dotElement) {
+            const mm = String(month + 1).padStart(2, '0');
+            const dd = String(day).padStart(2, '0');
+            const folderPath = `${PARENT_DIR}${dataset}/${year}/${mm}/${dd}/`;
+
+            fetch(folderPath, { method: 'HEAD', cache: 'no-store' })
+                .then(response => {
+                    if (response.ok) {
+                        dotElement.classList.add("available");
+                    } else if (response.status === 404) {
+                        dotElement.classList.add("unavailable");
+                    } else {
+                        dotElement.classList.add("offline");
+                        triggerOfflineMode();
+                    }
+                })
+                .catch(error => {
+                    dotElement.classList.add("offline");
+                    triggerOfflineMode();
+                });
+        }
+
+        function triggerOfflineMode() {
+            document.getElementById("onlineBanner").style.display = 'none';
+            document.getElementById("offlineBanner").style.display = 'block';
+        }
+
+        function changeMonth(direction) {
+            resetPreviewPanel();
+            currentMonth += direction;
+            if (currentMonth < 0) { currentMonth = 11; currentYear--; } 
+            else if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+            renderCalendar(currentMonth, currentYear);
+        }
+
+        function selectDate(year, month, day, dayElement) {
+            const dataset = document.getElementById("datasetSelector").value;
+            const mm = String(month + 1).padStart(2, '0');
+            const dd = String(day).padStart(2, '0');
+            const mjd = getMJD(year, month, day);
+            const folderPath = `${PARENT_DIR}${dataset}/${year}/${mm}/${dd}/`;
+
+            document.querySelectorAll('.calendar-day').forEach(el => el.classList.remove('selected'));
+            dayElement.classList.add('selected');
+
+            document.getElementById("previewTitle").innerText = `${dataset}\nMJD ${mjd}`;
+            document.getElementById("browseBtn").href = folderPath;
+            
+            const linksContainer = document.getElementById("dynamicFileLinks");
+            const previewImg = document.getElementById("previewImage");
+            const metadataBody = document.getElementById("metadataBody");
+            const plotDiv = document.getElementById("interactivePlot");
+            
+            linksContainer.innerHTML = '<span style="color: #94a3b8; font-size: 0.85rem;">Searching directory for files...</span>';
+            previewImg.style.display = 'none';
+            metadataBody.innerHTML = '';
+            plotDiv.style.display = 'none';
+            
+            document.getElementById("previewPlaceholder").style.display = 'none';
+            document.getElementById("previewActive").style.display = 'block';
+
+            fetch(`${folderPath}metadata.json`)
+                .then(response => response.ok ? response.json() : null)
+                .then(data => {
+                    if (data) {
+                        for (const [key, value] of Object.entries(data)) {
+                            // Filter out "Observer", "_err", and any data arrays from the general table view
+                            if (key === "Observer" || key.endsWith("_err") || Array.isArray(value)) continue;
+                            
+                            let displayValue = value;
+                            if (data[key + '_err'] !== undefined && key !== 'SNR') {
+                                displayValue = `${value} &plusmn; ${data[key + '_err']}`;
+                            }
+
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `<th>${key.replace(/_/g, ' ')}</th><td>${displayValue}</td>`;
+                            metadataBody.appendChild(tr);
+                        }
+
+                        if (data.Profile_bins && data.I && data.Q && data.U && data.V) {
+                            plotDiv.style.display = 'block';
+                            
+                            const xData = data.Profile_bins;
+                            const traces = [
+                                { x: xData, y: data.I, name: 'Stokes I', type: 'scatter', mode: 'lines+markers', line: {color: '#ffffff', width: 1}, marker: {color: '#ffffff', size: 4}, hoverinfo: 'none' },
+                                { x: xData, y: data.Q, name: 'Stokes Q', type: 'scatter', mode: 'lines+markers', line: {color: '#ef4444', width: 1}, marker: {color: '#ef4444', size: 4}, hoverinfo: 'none' },
+                                { x: xData, y: data.U, name: 'Stokes U', type: 'scatter', mode: 'lines+markers', line: {color: '#10b981', width: 1}, marker: {color: '#10b981', size: 4}, hoverinfo: 'none' },
+                                { x: xData, y: data.V, name: 'Stokes V', type: 'scatter', mode: 'lines+markers', line: {color: '#38bdf8', width: 1}, marker: {color: '#38bdf8', size: 4}, hoverinfo: 'none' }
+                            ];
+                            
+                            const layout = { 
+                                paper_bgcolor: '#1e293b', 
+                                plot_bgcolor: '#0f172a', 
+                                margin: { l: 40, r: 20, t: 40, b: 40 },
+                                title: { text: 'Polarization Profile (Stokes I, Q, U, V)', font: { color: '#818cf8', size: 13 } },
+                                xaxis: { title: 'Profile Bins', gridcolor: '#334155', tickfont: {color: '#cbd5e1'}, titlefont: {color: '#94a3b8', size: 11} },
+                                yaxis: { title: 'Intensity', gridcolor: '#334155', tickfont: {color: '#cbd5e1'}, titlefont: {color: '#94a3b8', size: 11} },
+                                legend: { font: {color: '#cbd5e1', size: 10}, orientation: 'h', y: -0.25 },
+                                hovermode: 'closest'
+                            };
+                            
+                            Plotly.newPlot('interactivePlot', traces, layout, {responsive: true, displayModeBar: false});
+
+                            plotDiv.on('plotly_click', function(clickData){
+                                Plotly.relayout('interactivePlot', {annotations: []});
+                                const point = clickData.points[0];
+                                const annotation = {
+                                    text: `${point.data.name}: ${point.y} (Bin ${point.x})`,
+                                    x: point.x,
+                                    y: point.y,
+                                    bgcolor: 'rgba(15, 23, 42, 0.9)',
+                                    bordercolor: point.data.line ? point.data.line.color : '#fff',
+                                    borderwidth: 2,
+                                    borderpad: 4,
+                                    font: {color: '#fff', size: 12},
+                                    arrowcolor: point.data.line ? point.data.line.color : '#fff',
+                                    ax: 0,
+                                    ay: -40
+                                };
+                                Plotly.relayout('interactivePlot', {annotations: [annotation]});
+                            });
+                        }
+                    } else {
+                        metadataBody.innerHTML = '<tr><td colspan="2" style="color:#ef4444; text-align:center;">No metadata.json found.</td></tr>';
+                    }
+                })
+                .catch(err => console.log("Metadata error:", err));
+
+            fetch(folderPath)
+                .then(response => {
+                    if (!response.ok) throw new Error("Directory not found");
+                    return response.text();
+                })
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const fileNames = Array.from(doc.querySelectorAll('a'))
+                        .map(a => a.getAttribute('href'))
+                        .filter(href => href !== '../' && !href.startsWith('/')); 
+
+                    linksContainer.innerHTML = '';
+                    let foundImage = false;
+
+                    if (fileNames.length === 0) {
+                        linksContainer.innerHTML = '<span style="color: #ef4444; font-size: 0.85rem;">No files found in directory.</span>';
+                    } else {
+                        fileNames.forEach(file => {
+                            const fileExt = file.split('.').pop().toLowerCase();
+                            if (['png', 'jpg', 'jpeg', 'gif'].includes(fileExt) && !foundImage) {
+                                previewImg.src = folderPath + file;
+                                previewImg.style.display = 'inline-block';
+                                foundImage = true;
+                            }
+
+                            if (file !== 'metadata.json') {
+                                const btn = document.createElement('a');
+                                btn.href = folderPath + file;
+                                btn.className = 'btn';
+                                btn.download = file;
+                                btn.innerText = `Download (.${fileExt})`;
+                                linksContainer.appendChild(btn);
+                            }
+                        });
+                    }
+                })
+                .catch(error => {
+                    linksContainer.innerHTML = '<span style="color: #ef4444; font-size: 0.85rem;">Could not read folder. No data available.</span>';
+                });
+        }
+
+        // --- ALL-TIME ARCHIVE CRAWLER & FILTERING LOGIC ---
+        function parseDirectoryHtml(html) {
+            const doc = new DOMParser().parseFromString(html, 'text/html');
+            return Array.from(doc.querySelectorAll('a'))
+                .map(a => a.getAttribute('href'))
+                .filter(href => href !== '../' && !href.startsWith('/'))
+                .map(href => href.replace(/\/$/, ''))
+                .filter(href => !isNaN(href)); 
+        }
+
+        async function loadAllTimeTrends() {
+            const dataset = document.getElementById("datasetSelector").value;
+            const btn = document.getElementById("trendsBtn");
+            const loadingDiv = document.getElementById("plotLoading");
+            
+            btn.style.display = 'none';
+            
+            let statusMsg = document.getElementById("crawlStatus");
+            if (!statusMsg) {
+                statusMsg = document.createElement("div");
+                statusMsg.id = "crawlStatus";
+                statusMsg.style.color = "#818cf8";
+                statusMsg.style.fontWeight = "bold";
+                statusMsg.style.marginTop = "10px";
+                loadingDiv.appendChild(statusMsg);
+            }
+            statusMsg.innerText = `Scanning archive for ${dataset}... this may take a moment.`;
+
+            let aggregatedData = {};
+
+            try {
+                const yearRes = await fetch(`${PARENT_DIR}${dataset}/`);
+                if (!yearRes.ok) throw new Error(`Could not access directory for ${dataset}.`);
+                const yearHtml = await yearRes.text();
+                const years = parseDirectoryHtml(yearHtml).filter(y => y.length === 4);
+
+                if(years.length === 0) throw new Error(`No year folders found for ${dataset}.`);
+
+                for (let y of years) {
+                    const monthRes = await fetch(`${PARENT_DIR}${dataset}/${y}/`);
+                    if (!monthRes.ok) continue;
+                    const monthHtml = await monthRes.text();
+                    const months = parseDirectoryHtml(monthHtml).filter(m => m.length === 2);
+
+                    for (let m of months) {
+                        const dayRes = await fetch(`${PARENT_DIR}${dataset}/${y}/${m}/`);
+                        if (!dayRes.ok) continue;
+                        const dayHtml = await dayRes.text();
+                        const days = parseDirectoryHtml(dayHtml).filter(d => d.length === 2);
+
+                        const dayPromises = days.map(d => {
+                            const path = `${PARENT_DIR}${dataset}/${y}/${m}/${d}/`;
+                            return fetch(`${path}metadata.json`)
+                                .then(r => r.ok ? r.json() : null)
+                                .then(data => {
+                                    if (data) {
+                                        const yearNum = parseInt(y);
+                                        const monthNum = parseInt(m) - 1; 
+                                        const dayNum = parseInt(d);
+                                        return { mjd: getMJD(yearNum, monthNum, dayNum), data: data };
+                                    }
+                                    return null;
+                                }).catch(() => null);
+                        });
+
+                        const monthResults = await Promise.all(dayPromises);
+                        
+                        monthResults.forEach(result => {
+                            if (result && result.data) {
+                                for (const [key, value] of Object.entries(result.data)) {
+                                    if (typeof value === 'number' && !Array.isArray(value)) {
+                                        if (!aggregatedData[key]) aggregatedData[key] = { x: [], y: [] };
+                                        aggregatedData[key].x.push(result.mjd);
+                                        aggregatedData[key].y.push(value);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+
+                const variables = Object.keys(aggregatedData).filter(k => !k.endsWith('_err'));
+                
+                if (variables.length > 0) {
+                    const select = document.getElementById("trendVariable");
+                    select.innerHTML = '';
+                    variables.forEach(v => {
+                        const option = document.createElement("option");
+                        option.value = v;
+                        option.innerText = v.replace(/_/g, ' ');
+                        select.appendChild(option);
+                    });
+
+                    // Initialize SNR Slider if SNR data exists
+                    const snrData = aggregatedData['SNR'];
+                    if (snrData && snrData.y && snrData.y.length > 0) {
+                        const maxSnr = Math.max(...snrData.y);
+                        const minSnr = Math.min(...snrData.y);
+                        const snrSlider = document.getElementById("snrSlider");
+                        
+                        snrSlider.max = maxSnr;
+                        snrSlider.min = minSnr; 
+                        snrSlider.step = "any";
+                        
+                        snrSlider.value = minSnr; // Default to showing all data
+                        document.getElementById("snrFilterContainer").style.display = 'flex';
+                    } else {
+                        document.getElementById("snrFilterContainer").style.display = 'none';
+                    }
+
+                    loadingDiv.style.display = 'none';
+                    document.getElementById("trendControls").style.display = 'flex';
+                    document.getElementById("overviewPlot").style.display = 'block';
+
+                    select.removeEventListener("change", handleVariableChange);
+                    select.addEventListener("change", handleVariableChange);
+
+                    window.currentAggregatedTrendData = aggregatedData;
+                    handleVariableChange();
+                } else {
+                    statusMsg.innerText = "No numeric metadata variables found for this pulsar.";
+                    btn.style.display = 'inline-block';
+                    btn.innerText = "Retry";
+                }
+
+            } catch (error) {
+                console.error(error);
+                statusMsg.innerHTML = `<span style="color:#ef4444;">Error: ${error.message}</span>`;
+                btn.style.display = 'inline-block';
+                btn.innerText = "Retry";
+            }
+        }
+
+        // Formats extremely small errors into scientific notation so the label is readable
+        function formatSliderValue(val) {
+            let num = parseFloat(val);
+            if (num === 0) return "0";
+            if (Math.abs(num) < 0.01 || Math.abs(num) > 10000) return num.toExponential(2);
+            return num.toFixed(2);
+        }
+
+        function updateSliderLabels() {
+            if (document.getElementById("errorFilterContainer").style.display !== 'none') {
+                document.getElementById("errorSliderValue").innerText = formatSliderValue(document.getElementById("errorSlider").value);
+            }
+            if (document.getElementById("snrFilterContainer").style.display !== 'none') {
+                document.getElementById("snrSliderValue").innerText = formatSliderValue(document.getElementById("snrSlider").value);
+            }
+        }
+
+        function handleVariableChange() {
+            const selectedVar = document.getElementById("trendVariable").value;
+            const errorData = (selectedVar === 'SNR') ? undefined : window.currentAggregatedTrendData[selectedVar + '_err'];
+            const filterContainer = document.getElementById("errorFilterContainer");
+            
+            // Reconfigure the error slider based on the new variable's error bounds
+            if (errorData && errorData.y && errorData.y.length > 0) {
+                const maxErr = Math.max(...errorData.y);
+                const slider = document.getElementById("errorSlider");
+                
+                // Add tiny headroom to max to prevent float clipping the highest point
+                const headroomMax = maxErr === 0 ? 0.1 : maxErr * 1.05; 
+                
+                slider.max = headroomMax;
+                slider.min = 0; 
+                slider.step = "any"; 
+                
+                slider.value = headroomMax; 
+                filterContainer.style.display = 'flex';
+            } else {
+                filterContainer.style.display = 'none';
+            }
+            
+            updateSliderLabels();
+            plotTrend();
+        }
+
+        function plotTrend() {
+            const selectedVar = document.getElementById("trendVariable").value;
+            const data = window.currentAggregatedTrendData[selectedVar];
+            const errorData = (selectedVar === 'SNR') ? undefined : window.currentAggregatedTrendData[selectedVar + '_err']; 
+            const datasetName = document.getElementById("datasetSelector").value;
+
+            // Fetch Current Filter Values
+            let maxErrorAllowed = Infinity;
+            if (document.getElementById("errorFilterContainer").style.display !== 'none') {
+                maxErrorAllowed = parseFloat(document.getElementById("errorSlider").value);
+            }
+
+            let minSnrAllowed = -Infinity;
+            if (document.getElementById("snrFilterContainer").style.display !== 'none') {
+                minSnrAllowed = parseFloat(document.getElementById("snrSlider").value);
+            }
+
+            // Map SNR values to MJD so we can cross-filter any variable
+            const snrData = window.currentAggregatedTrendData['SNR'];
+            const snrMap = {};
+            if (snrData) {
+                snrData.x.forEach((xVal, idx) => {
+                    snrMap[xVal] = snrData.y[idx];
+                });
+            }
+
+            // Pair data, filter based on thresholds, and sort chronologically by MJD
+            let sortedIndices = data.x.map((val, ind) => { 
+                return {
+                    x: parseFloat(val), 
+                    y: data.y[ind],
+                    e: errorData ? errorData.y[ind] : 0,
+                    snr: snrMap[val] !== undefined ? snrMap[val] : Infinity
+                };
+            }).filter(item => {
+                // Remove points where the error exceeds the threshold OR the SNR is below the threshold
+                return item.e <= maxErrorAllowed && item.snr >= minSnrAllowed;
+            }).sort((a, b) => a.x - b.x);
+            
+            const xSorted = sortedIndices.map(val => val.x);
+            const ySorted = sortedIndices.map(val => val.y);
+            const eSorted = sortedIndices.map(val => val.e);
+
+            const trace = {
+                x: xSorted,
+                y: ySorted,
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: selectedVar.replace(/_/g, ' '),
+                marker: { color: '#10b981', size: 8 },
+                line: { color: '#38bdf8', width: 2 }
+            };
+
+            if (errorData) {
+                trace.error_y = {
+                    type: 'data',
+                    array: eSorted,
+                    visible: true,
+                    color: '#f59e0b',
+                    thickness: 1.5,
+                    width: 4
+                };
+                trace.customdata = eSorted;
+                trace.hovertemplate = '<b>MJD:</b> %{x}<br><b>Value:</b> %{y} &plusmn; %{customdata}<extra></extra>';
+            } else {
+                trace.hovertemplate = '<b>MJD:</b> %{x}<br><b>Value:</b> %{y}<extra></extra>';
+            }
+
+            const layout = {
+                paper_bgcolor: '#1e293b',
+                plot_bgcolor: '#0f172a',
+                margin: { l: 60, r: 40, t: 50, b: 60 },
+                title: { text: `${datasetName}: ${selectedVar.replace(/_/g, ' ')} Trends`, font: { color: '#818cf8', size: 16 } },
+                xaxis: { 
+                    title: 'Modified Julian Date (MJD)', 
+                    gridcolor: '#334155', 
+                    tickfont: { color: '#cbd5e1' }, 
+                    titlefont: { color: '#94a3b8', size: 13 },
+                    tickformat: 'd' 
+                },
+                yaxis: { gridcolor: '#334155', tickfont: { color: '#cbd5e1' } },
+                hovermode: 'closest'
+            };
+
+            Plotly.newPlot('overviewPlot', [trace], layout, {responsive: true, displayModeBar: true});
+        }
+
+        renderCalendar(currentMonth, currentYear);
+    </script>
+</body>
+</html>
