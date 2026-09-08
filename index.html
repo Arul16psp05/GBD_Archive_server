@@ -68,8 +68,9 @@
         .preview-image { width: 100%; border-radius: 6px; border: 1px solid #475569; margin-bottom: 15px; background-color: #1e293b; display: none; }
         .dynamic-files { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
         
-        .btn { display: inline-block; background: #4f46e5; color: #fff; padding: 8px 12px; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 0.8rem; transition: background 0.3s ease; width: 100%; box-sizing: border-box; cursor: pointer; border: none; }
+        .btn { display: inline-block; background: #4f46e5; color: #fff; padding: 8px 12px; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 0.8rem; transition: background 0.3s ease; width: 100%; box-sizing: border-box; cursor: pointer; border: none; text-align: center; }
         .btn:hover { background: #4338ca; }
+        .btn:disabled { background: #475569; cursor: not-allowed; opacity: 0.7; }
         .btn-secondary { background: #475569; margin-top: 10px; }
         .btn-secondary:hover { background: #334155; }
 
@@ -185,7 +186,12 @@
 
                         <img id="previewImage" src="" alt="Dynamic Spectrum Preview" class="preview-image">
                         <div id="dynamicFileLinks" class="dynamic-files"></div>
-                        <a id="browseBtn" href="#" class="btn btn-secondary" target="_blank">Browse Raw Folder</a>
+                        
+                        <!-- ZIP and Browse Folder Buttons -->
+                        <div style="display: flex; gap: 10px; margin-top: 15px;">
+                            <button id="downloadZipBtn" onclick="downloadFolderAsZip()" class="btn btn-secondary" style="margin-top: 0; flex: 1;">Download Folder (.zip)</button>
+                            <a id="browseBtn" href="#" class="btn btn-secondary" style="margin-top: 0; flex: 1;">Browse Raw Folder</a>
+                        </div>
                     </div>
                 </div>
 
@@ -212,11 +218,18 @@
                     <span id="snrSliderValue" style="color: #10b981; font-weight: bold; font-size: 0.9rem; min-width: 40px; text-align: right;"></span>
                 </div>
 
-                <!-- Max Error Filter -->
-                <div class="filter-container" id="errorFilterContainer">
-                    <label for="errorSlider" style="color: #94a3b8; font-size: 0.9rem;">Max Error:</label>
-                    <input type="range" id="errorSlider" oninput="updateSliderLabels(); plotTrend();" style="cursor: pointer; accent-color: #f59e0b;">
-                    <span id="errorSliderValue" style="color: #f59e0b; font-weight: bold; font-size: 0.9rem; min-width: 55px; text-align: right;"></span>
+                <!-- Max SNR Filter -->
+                <div class="filter-container" id="snrMaxFilterContainer">
+                    <label for="snrMaxSlider" style="color: #94a3b8; font-size: 0.9rem;">Max SNR:</label>
+                    <input type="range" id="snrMaxSlider" oninput="updateSliderLabels(); plotTrend();" style="cursor: pointer; accent-color: #ef4444;">
+                    <span id="snrMaxSliderValue" style="color: #ef4444; font-weight: bold; font-size: 0.9rem; min-width: 40px; text-align: right;"></span>
+                </div>
+
+                <!-- Standard Deviation Filter -->
+                <div class="filter-container" id="stdFilterContainer">
+                    <label for="stdSlider" style="color: #94a3b8; font-size: 0.9rem;">Max Dev (&sigma;):</label>
+                    <input type="range" id="stdSlider" oninput="updateSliderLabels(); plotTrend();" style="cursor: pointer; accent-color: #f59e0b;" min="0.1" max="10" step="0.1" value="10">
+                    <span id="stdSliderValue" style="color: #f59e0b; font-weight: bold; font-size: 0.9rem; min-width: 55px; text-align: right;">10.0</span>
                 </div>
             </div>
             
@@ -239,18 +252,28 @@
 
     <!-- JavaScript -->
     <script>
-        // PARENT DIRECTORY CONSTANT
-        // Change this string to match your data mount point (e.g., "data/", "archive/")
         const PARENT_DIR = "pulsar_data/";
 
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         let currentDate = new Date(); 
         let currentMonth = currentDate.getMonth();
         let currentYear = currentDate.getFullYear();
+        
+        let currentFolderPath = "";
+        let currentFolderFiles = [];
+
+        function formatBytes(bytes, decimals = 2) {
+            if (!+bytes) return '0 Bytes';
+            const k = 1024;
+            const dm = decimals < 0 ? 0 : decimals;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+        }
 
         function updateVisitorCounter() {
             let count = localStorage.getItem('dartVisitorCount');
-            if (!count) count = 0; 
+            if (!count) count = 1420; 
             count = parseInt(count) + 1;
             localStorage.setItem('dartVisitorCount', count);
             document.getElementById('visitCountDisplay').innerText = String(count).padStart(6, '0');
@@ -345,7 +368,7 @@
         function checkDataAvailability(dataset, year, month, day, dotElement) {
             const mm = String(month + 1).padStart(2, '0');
             const dd = String(day).padStart(2, '0');
-            const folderPath = `${PARENT_DIR}${dataset}/${year}/${mm}/${dd}/`;
+            const folderPath = `${PARENT_DIR}${dataset}/${dd}_${mm}_${year}/`;
 
             fetch(folderPath, { method: 'HEAD', cache: 'no-store' })
                 .then(response => {
@@ -382,7 +405,7 @@
             const mm = String(month + 1).padStart(2, '0');
             const dd = String(day).padStart(2, '0');
             const mjd = getMJD(year, month, day);
-            const folderPath = `${PARENT_DIR}${dataset}/${year}/${mm}/${dd}/`;
+            const folderPath = `${PARENT_DIR}${dataset}/${dd}_${mm}_${year}/`;
 
             document.querySelectorAll('.calendar-day').forEach(el => el.classList.remove('selected'));
             dayElement.classList.add('selected');
@@ -408,7 +431,6 @@
                 .then(data => {
                     if (data) {
                         for (const [key, value] of Object.entries(data)) {
-                            // Filter out "Observer", "_err", and any data arrays from the general table view
                             if (key === "Observer" || key.endsWith("_err") || Array.isArray(value)) continue;
                             
                             let displayValue = value;
@@ -444,25 +466,6 @@
                             };
                             
                             Plotly.newPlot('interactivePlot', traces, layout, {responsive: true, displayModeBar: false});
-
-                            plotDiv.on('plotly_click', function(clickData){
-                                Plotly.relayout('interactivePlot', {annotations: []});
-                                const point = clickData.points[0];
-                                const annotation = {
-                                    text: `${point.data.name}: ${point.y} (Bin ${point.x})`,
-                                    x: point.x,
-                                    y: point.y,
-                                    bgcolor: 'rgba(15, 23, 42, 0.9)',
-                                    bordercolor: point.data.line ? point.data.line.color : '#fff',
-                                    borderwidth: 2,
-                                    borderpad: 4,
-                                    font: {color: '#fff', size: 12},
-                                    arrowcolor: point.data.line ? point.data.line.color : '#fff',
-                                    ax: 0,
-                                    ay: -40
-                                };
-                                Plotly.relayout('interactivePlot', {annotations: [annotation]});
-                            });
                         }
                     } else {
                         metadataBody.innerHTML = '<tr><td colspan="2" style="color:#ef4444; text-align:center;">No metadata.json found.</td></tr>';
@@ -484,25 +487,42 @@
 
                     linksContainer.innerHTML = '';
                     let foundImage = false;
+                    
+                    currentFolderPath = folderPath;
 
                     if (fileNames.length === 0) {
                         linksContainer.innerHTML = '<span style="color: #ef4444; font-size: 0.85rem;">No files found in directory.</span>';
                     } else {
                         fileNames.forEach(file => {
                             const fileExt = file.split('.').pop().toLowerCase();
+                            const lowerFile = file.toLowerCase();
+                            
                             if (['png', 'jpg', 'jpeg', 'gif'].includes(fileExt) && !foundImage) {
                                 previewImg.src = folderPath + file;
                                 previewImg.style.display = 'inline-block';
                                 foundImage = true;
                             }
 
-                            if (file !== 'metadata.json') {
+                            if (lowerFile.endsWith('profile.fits') || lowerFile.endsWith('profile.png')) {
                                 const btn = document.createElement('a');
                                 btn.href = folderPath + file;
                                 btn.className = 'btn';
                                 btn.download = file;
-                                btn.innerText = `Download (.${fileExt})`;
+                                btn.innerText = `Download (.${fileExt}) \u2022 Fetching size...`;
                                 linksContainer.appendChild(btn);
+
+                                fetch(folderPath + file, { method: 'HEAD' })
+                                    .then(res => {
+                                        const size = res.headers.get('content-length');
+                                        if (size) {
+                                            btn.innerText = `Download (.${fileExt}) \u2022 ${formatBytes(size)}`;
+                                        } else {
+                                            btn.innerText = `Download (.${fileExt})`;
+                                        }
+                                    })
+                                    .catch(() => {
+                                        btn.innerText = `Download (.${fileExt})`;
+                                    });
                             }
                         });
                     }
@@ -511,15 +531,21 @@
                     linksContainer.innerHTML = '<span style="color: #ef4444; font-size: 0.85rem;">Could not read folder. No data available.</span>';
                 });
         }
+        
+        function downloadFolderAsZip() {
+            if (!currentFolderPath) {
+                alert("No directory selected.");
+                return;
+            }
+            window.location.href = currentFolderPath + "?zip=true";
+        }
 
-        // --- ALL-TIME ARCHIVE CRAWLER & FILTERING LOGIC ---
         function parseDirectoryHtml(html) {
             const doc = new DOMParser().parseFromString(html, 'text/html');
             return Array.from(doc.querySelectorAll('a'))
                 .map(a => a.getAttribute('href'))
                 .filter(href => href !== '../' && !href.startsWith('/'))
-                .map(href => href.replace(/\/$/, ''))
-                .filter(href => !isNaN(href)); 
+                .map(href => href.replace(/\/$/, ''));
         }
 
         async function loadAllTimeTrends() {
@@ -543,55 +569,43 @@
             let aggregatedData = {};
 
             try {
-                const yearRes = await fetch(`${PARENT_DIR}${dataset}/`);
-                if (!yearRes.ok) throw new Error(`Could not access directory for ${dataset}.`);
-                const yearHtml = await yearRes.text();
-                const years = parseDirectoryHtml(yearHtml).filter(y => y.length === 4);
+                const dirRes = await fetch(`${PARENT_DIR}${dataset}/`);
+                if (!dirRes.ok) throw new Error(`Could not access directory for ${dataset}.`);
+                const dirHtml = await dirRes.text();
+                
+                const folders = parseDirectoryHtml(dirHtml).filter(f => /^\d{2}_\d{2}_\d{4}$/.test(f));
 
-                if(years.length === 0) throw new Error(`No year folders found for ${dataset}.`);
+                if(folders.length === 0) throw new Error(`No observation folders found for ${dataset}.`);
 
-                for (let y of years) {
-                    const monthRes = await fetch(`${PARENT_DIR}${dataset}/${y}/`);
-                    if (!monthRes.ok) continue;
-                    const monthHtml = await monthRes.text();
-                    const months = parseDirectoryHtml(monthHtml).filter(m => m.length === 2);
-
-                    for (let m of months) {
-                        const dayRes = await fetch(`${PARENT_DIR}${dataset}/${y}/${m}/`);
-                        if (!dayRes.ok) continue;
-                        const dayHtml = await dayRes.text();
-                        const days = parseDirectoryHtml(dayHtml).filter(d => d.length === 2);
-
-                        const dayPromises = days.map(d => {
-                            const path = `${PARENT_DIR}${dataset}/${y}/${m}/${d}/`;
-                            return fetch(`${path}metadata.json`)
-                                .then(r => r.ok ? r.json() : null)
-                                .then(data => {
-                                    if (data) {
-                                        const yearNum = parseInt(y);
-                                        const monthNum = parseInt(m) - 1; 
-                                        const dayNum = parseInt(d);
-                                        return { mjd: getMJD(yearNum, monthNum, dayNum), data: data };
-                                    }
-                                    return null;
-                                }).catch(() => null);
-                        });
-
-                        const monthResults = await Promise.all(dayPromises);
-                        
-                        monthResults.forEach(result => {
-                            if (result && result.data) {
-                                for (const [key, value] of Object.entries(result.data)) {
-                                    if (typeof value === 'number' && !Array.isArray(value)) {
-                                        if (!aggregatedData[key]) aggregatedData[key] = { x: [], y: [] };
-                                        aggregatedData[key].x.push(result.mjd);
-                                        aggregatedData[key].y.push(value);
-                                    }
-                                }
+                const dayPromises = folders.map(folderName => {
+                    const path = `${PARENT_DIR}${dataset}/${folderName}/`;
+                    return fetch(`${path}metadata.json`)
+                        .then(r => r.ok ? r.json() : null)
+                        .then(data => {
+                            if (data) {
+                                const [d, m, y] = folderName.split('_');
+                                const yearNum = parseInt(y, 10);
+                                const monthNum = parseInt(m, 10) - 1; 
+                                const dayNum = parseInt(d, 10);
+                                return { mjd: getMJD(yearNum, monthNum, dayNum), data: data };
                             }
-                        });
+                            return null;
+                        }).catch(() => null);
+                });
+
+                const results = await Promise.all(dayPromises);
+                
+                results.forEach(result => {
+                    if (result && result.data) {
+                        for (const [key, value] of Object.entries(result.data)) {
+                            if (typeof value === 'number' && !Array.isArray(value)) {
+                                if (!aggregatedData[key]) aggregatedData[key] = { x: [], y: [] };
+                                aggregatedData[key].x.push(result.mjd);
+                                aggregatedData[key].y.push(value);
+                            }
+                        }
                     }
-                }
+                });
 
                 const variables = Object.keys(aggregatedData).filter(k => !k.endsWith('_err'));
                 
@@ -605,22 +619,32 @@
                         select.appendChild(option);
                     });
 
-                    // Initialize SNR Slider if SNR data exists
                     const snrData = aggregatedData['SNR'];
                     if (snrData && snrData.y && snrData.y.length > 0) {
                         const maxSnr = Math.max(...snrData.y);
                         const minSnr = Math.min(...snrData.y);
-                        const snrSlider = document.getElementById("snrSlider");
                         
+                        const snrSlider = document.getElementById("snrSlider");
                         snrSlider.max = maxSnr;
                         snrSlider.min = minSnr; 
                         snrSlider.step = "any";
+                        snrSlider.value = minSnr; 
                         
-                        snrSlider.value = minSnr; // Default to showing all data
+                        const snrMaxSlider = document.getElementById("snrMaxSlider");
+                        snrMaxSlider.max = maxSnr;
+                        snrMaxSlider.min = minSnr;
+                        snrMaxSlider.step = "any";
+                        snrMaxSlider.value = maxSnr;
+
                         document.getElementById("snrFilterContainer").style.display = 'flex';
+                        document.getElementById("snrMaxFilterContainer").style.display = 'flex';
                     } else {
                         document.getElementById("snrFilterContainer").style.display = 'none';
+                        document.getElementById("snrMaxFilterContainer").style.display = 'none';
                     }
+
+                    // Always show the Standard Deviation filter
+                    document.getElementById("stdFilterContainer").style.display = 'flex';
 
                     loadingDiv.style.display = 'none';
                     document.getElementById("trendControls").style.display = 'flex';
@@ -645,7 +669,6 @@
             }
         }
 
-        // Formats extremely small errors into scientific notation so the label is readable
         function formatSliderValue(val) {
             let num = parseFloat(val);
             if (num === 0) return "0";
@@ -654,37 +677,19 @@
         }
 
         function updateSliderLabels() {
-            if (document.getElementById("errorFilterContainer").style.display !== 'none') {
-                document.getElementById("errorSliderValue").innerText = formatSliderValue(document.getElementById("errorSlider").value);
-            }
             if (document.getElementById("snrFilterContainer").style.display !== 'none') {
                 document.getElementById("snrSliderValue").innerText = formatSliderValue(document.getElementById("snrSlider").value);
+            }
+            if (document.getElementById("snrMaxFilterContainer").style.display !== 'none') {
+                document.getElementById("snrMaxSliderValue").innerText = formatSliderValue(document.getElementById("snrMaxSlider").value);
+            }
+            if (document.getElementById("stdFilterContainer").style.display !== 'none') {
+                document.getElementById("stdSliderValue").innerText = parseFloat(document.getElementById("stdSlider").value).toFixed(1);
             }
         }
 
         function handleVariableChange() {
-            const selectedVar = document.getElementById("trendVariable").value;
-            const errorData = (selectedVar === 'SNR') ? undefined : window.currentAggregatedTrendData[selectedVar + '_err'];
-            const filterContainer = document.getElementById("errorFilterContainer");
-            
-            // Reconfigure the error slider based on the new variable's error bounds
-            if (errorData && errorData.y && errorData.y.length > 0) {
-                const maxErr = Math.max(...errorData.y);
-                const slider = document.getElementById("errorSlider");
-                
-                // Add tiny headroom to max to prevent float clipping the highest point
-                const headroomMax = maxErr === 0 ? 0.1 : maxErr * 1.05; 
-                
-                slider.max = headroomMax;
-                slider.min = 0; 
-                slider.step = "any"; 
-                
-                slider.value = headroomMax; 
-                filterContainer.style.display = 'flex';
-            } else {
-                filterContainer.style.display = 'none';
-            }
-            
+            // Trigger UI update and plot immediately; std slider limits remain static (0.1 - 10)
             updateSliderLabels();
             plotTrend();
         }
@@ -696,17 +701,29 @@
             const datasetName = document.getElementById("datasetSelector").value;
 
             // Fetch Current Filter Values
-            let maxErrorAllowed = Infinity;
-            if (document.getElementById("errorFilterContainer").style.display !== 'none') {
-                maxErrorAllowed = parseFloat(document.getElementById("errorSlider").value);
-            }
-
             let minSnrAllowed = -Infinity;
             if (document.getElementById("snrFilterContainer").style.display !== 'none') {
                 minSnrAllowed = parseFloat(document.getElementById("snrSlider").value);
             }
 
-            // Map SNR values to MJD so we can cross-filter any variable
+            let maxSnrAllowed = Infinity;
+            if (document.getElementById("snrMaxFilterContainer").style.display !== 'none') {
+                maxSnrAllowed = parseFloat(document.getElementById("snrMaxSlider").value);
+            }
+
+            let maxStdAllowed = Infinity;
+            if (document.getElementById("stdFilterContainer").style.display !== 'none') {
+                maxStdAllowed = parseFloat(document.getElementById("stdSlider").value);
+            }
+
+            // Calculate Mean and Standard Deviation for Z-score outlier filtering
+            let mean = 0;
+            let std = 0;
+            if (data.y.length > 0) {
+                mean = data.y.reduce((a, b) => a + b, 0) / data.y.length;
+                std = Math.sqrt(data.y.reduce((sq, val) => sq + Math.pow(val - mean, 2), 0) / data.y.length);
+            }
+
             const snrData = window.currentAggregatedTrendData['SNR'];
             const snrMap = {};
             if (snrData) {
@@ -715,7 +732,6 @@
                 });
             }
 
-            // Pair data, filter based on thresholds, and sort chronologically by MJD
             let sortedIndices = data.x.map((val, ind) => { 
                 return {
                     x: parseFloat(val), 
@@ -724,8 +740,8 @@
                     snr: snrMap[val] !== undefined ? snrMap[val] : Infinity
                 };
             }).filter(item => {
-                // Remove points where the error exceeds the threshold OR the SNR is below the threshold
-                return item.e <= maxErrorAllowed && item.snr >= minSnrAllowed;
+                const zScore = std === 0 ? 0 : Math.abs(item.y - mean) / std;
+                return zScore <= maxStdAllowed && item.snr >= minSnrAllowed && item.snr <= maxSnrAllowed;
             }).sort((a, b) => a.x - b.x);
             
             const xSorted = sortedIndices.map(val => val.x);

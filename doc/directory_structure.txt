@@ -1,146 +1,307 @@
-pulsar_data
-├── J0534+2200
-│   └── 2026
-│       └── 09
-│           ├── 01
-│           │   ├── J0534+2200_61284.07137_01_09_2026.fits
-│           │   ├── J0534+2200_61284.07137_01_09_2026.png
-│           │   └── metadata.json
-│           ├── 02
-│           │   ├── J0534+2200_61285.06873_02_09_2026.fits
-│           │   ├── J0534+2200_61285.06873_02_09_2026.png
-│           │   └── metadata.json
-│           ├── 03
-│           │   ├── J0534+2200_61286.06608_03_09_2026.fits
-│           │   ├── J0534+2200_61286.06608_03_09_2026.png
-│           │   └── metadata.json
-│           ├── 04
-│           │   ├── J0534+2200_61287.06344_04_09_2026.fits
-│           │   ├── J0534+2200_61287.06344_04_09_2026.png
-│           │   └── metadata.json
-│           ├── 05
-│           │   ├── J0534+2200_61288.06080_05_09_2026.fits
-│           │   ├── J0534+2200_61288.06080_05_09_2026.png
-│           │   └── metadata.json
-│           ├── 06
-│           │   ├── J0534+2200_61289.05816_06_09_2026.fits
-│           │   ├── J0534+2200_61289.05816_06_09_2026.png
-│           │   └── metadata.json
-│           └── 07
-│               ├── J0534+2200_61290.05551_07_09_2026.fits
-│               ├── J0534+2200_61290.05551_07_09_2026.png
-│               └── metadata.json
-├── J0837+0610
-│   └── 2026
-│       └── 09
-│           ├── 01
-│           │   ├── J0837+0610_61284.19438_01_09_2026.fits
-│           │   ├── J0837+0610_61284.19438_01_09_2026.png
-│           │   └── metadata.json
-│           ├── 02
-│           │   ├── J0837+0610_61285.19169_02_09_2026.fits
-│           │   ├── J0837+0610_61285.19169_02_09_2026.png
-│           │   └── metadata.json
-│           ├── 03
-│           │   ├── J0837+0610_61286.18899_03_09_2026.fits
-│           │   ├── J0837+0610_61286.18899_03_09_2026.png
-│           │   └── metadata.json
-│           ├── 04
-│           │   ├── J0837+0610_61287.18631_04_09_2026.fits
-│           │   ├── J0837+0610_61287.18631_04_09_2026.png
-│           │   └── metadata.json
-│           ├── 05
-│           │   ├── J0837+0610_61288.18362_05_09_2026.fits
-│           │   ├── J0837+0610_61288.18362_05_09_2026.png
-│           │   └── metadata.json
-│           ├── 06
-│           │   ├── J0837+0610_61289.18093_06_09_2026.fits
-│           │   ├── J0837+0610_61289.18093_06_09_2026.png
-│           │   └── metadata.json
-│           └── 07
-│               ├── J0837+0610_61290.17825_07_09_2026.fits
-│               ├── J0837+0610_61290.17825_07_09_2026.png
-│               └── metadata.json
-├── J0953+0755
-│   └── 2026
-│       └── 09
-│           ├── 01
-│           │   ├── J0953+0755_61284.24644_01_09_2026.fits
-│           │   ├── J0953+0755_61284.24644_01_09_2026.png
-│           │   └── metadata.json
-│           ├── 02
-│           │   ├── J0953+0755_61285.24372_02_09_2026.fits
-│           │   ├── J0953+0755_61285.24372_02_09_2026.png
-│           │   └── metadata.json
-│           ├── 03
-│           │   ├── J0953+0755_61286.24100_03_09_2026.fits
-│           │   ├── J0953+0755_61286.24100_03_09_2026.png
-│           │   └── metadata.json
-│           ├── 05
-│           │   ├── J0953+0755_61288.23557_05_09_2026.fits
-│           │   ├── J0953+0755_61288.23557_05_09_2026.png
-│           │   └── metadata.json
-│           ├── 06
-│           │   ├── J0953+0755_61289.23286_06_09_2026.fits
-│           │   ├── J0953+0755_61289.23286_06_09_2026.png
-│           │   └── metadata.json
-│           └── 07
-│               ├── J0953+0755_61290.23015_07_09_2026.fits
-│               ├── J0953+0755_61290.23015_07_09_2026.png
-│               └── metadata.json
-├── J1136+1551
-│   └── 2026
-│       └── 09
-│           ├── 01
-│           │   ├── J1136+1551_61284.31786_01_09_2026.fits
-│           │   ├── J1136+1551_61284.31786_01_09_2026.png
-│           │   └── metadata.json
-│           ├── 02
-│           │   ├── J1136+1551_61285.31511_02_09_2026.fits
-│           │   ├── J1136+1551_61285.31511_02_09_2026.png
-│           │   └── metadata.json
-│           ├── 03
-│           │   ├── J1136+1551_61286.30661_03_09_2026.fits
-│           │   ├── J1136+1551_61286.30661_03_09_2026.png
-│           │   └── metadata.json
-│           ├── 04
-│           │   ├── J1136+1551_61287.30927_04_09_2026.fits
-│           │   ├── J1136+1551_61287.30927_04_09_2026.png
-│           │   └── metadata.json
-│           ├── 05
-│           │   ├── J1136+1551_61288.30686_05_09_2026.fits
-│           │   ├── J1136+1551_61288.30686_05_09_2026.png
-│           │   └── metadata.json
-│           ├── 06
-│           │   ├── J1136+1551_61289.30412_06_09_2026.fits
-│           │   ├── J1136+1551_61289.30412_06_09_2026.png
-│           │   └── metadata.json
-│           └── 07
-│               ├── J1136+1551_61290.30137_07_09_2026.fits
-│               ├── J1136+1551_61290.30137_07_09_2026.png
-│               └── metadata.json
-└── J1921+2153
-    └── 2026
-        └── 09
-            ├── 01
-            │   ├── J1921+2153_61284.64879_01_09_2026.fits
-            │   ├── J1921+2153_61284.64879_01_09_2026.png
-            │   └── metadata.json
-            ├── 02
-            │   ├── J1921+2153_61285.64600_02_09_2026.fits
-            │   ├── J1921+2153_61285.64600_02_09_2026.png
-            │   └── metadata.json
-            ├── 03
-            │   ├── J1921+2153_61286.64321_03_09_2026.fits
-            │   ├── J1921+2153_61286.64321_03_09_2026.png
-            │   └── metadata.json
-            ├── 04
-            │   ├── J1921+2153_61287.64178_04_09_2026.fits
-            │   ├── J1921+2153_61287.64178_04_09_2026.png
-            │   └── metadata.json
-            └── 06
-                ├── J1921+2153_61289.63484_06_09_2026.fits
-                ├── J1921+2153_61289.63484_06_09_2026.png
-                └── metadata.json
-
-47 directories, 96 files
+J0534+2200
+├── 01_09_2026
+│   ├── clean.log
+│   ├── J0534+2200_2026_09_01_06_54_33_type_0.dada_intensity.fits_ACCEL_8
+│   ├── J0534+2200_2026_09_01_06_54_33_type_0.dada_intensity.fits_ACCEL_8.cand
+│   ├── J0534+2200_2026_09_01_06_54_33_type_0.dada_intensity.fits_ACCEL_8.txtcand
+│   ├── J0534+2200_2026_09_01_06_54_33_type_0.dada_intensity.fits.dat
+│   ├── J0534+2200_2026_09_01_06_54_33_type_0.dada_intensity.fits.fft
+│   ├── J0534+2200_2026_09_01_06_54_33_type_0.dada_intensity.fits.inf
+│   ├── J0534+2200_61284_01_09_26_profile.fits
+│   ├── J0534+2200_61284_01_09_26_profile.png
+│   ├── J0534+2200_61284.06_175MHz_type_0_GBD_DART.fits
+│   ├── J0534+2200_61284.06_175MHz_type_0_GBD_DART.fits_cleaned.ar
+│   ├── J0534+2200_61284.06_175MHz_type_0_GBD_DART.fits_cleaned.ar.ps
+│   ├── J0534+2200_61284.06_175MHz_type_0_GBD_DART.fits_cleaned.ar.ps.pdf
+│   ├── J0534+2200_61284.06_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits
+│   ├── J0534+2200_61284.06_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits_cleaned.ar
+│   ├── J0534+2200_61284.06_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits_cleaned.ar.ps
+│   ├── J0534+2200_61284.06_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits_cleaned.ar.ps.pdf
+│   ├── J0534+2200_61284.07137_01_09_2026_profile.fits
+│   ├── J0534+2200_61284.07137_01_09_2026_profile.png
+│   ├── J0534+2200_rfifind.bytemask
+│   ├── J0534+2200_rfifind.inf
+│   ├── J0534+2200_rfifind.mask
+│   ├── J0534+2200_rfifind.ps
+│   ├── J0534+2200_rfifind.rfi
+│   ├── J0534+2200_rfifind.stats
+│   ├── metadata.json
+│   ├── pdmp.per
+│   └── pdmp.posn
+├── 02_09_2026
+│   ├── clean.log
+│   ├── J0534+2200_2026_09_02_06_50_36_type_0.dada_intensity.fits_ACCEL_8
+│   ├── J0534+2200_2026_09_02_06_50_36_type_0.dada_intensity.fits_ACCEL_8.cand
+│   ├── J0534+2200_2026_09_02_06_50_36_type_0.dada_intensity.fits_ACCEL_8.txtcand
+│   ├── J0534+2200_2026_09_02_06_50_36_type_0.dada_intensity.fits.dat
+│   ├── J0534+2200_2026_09_02_06_50_36_type_0.dada_intensity.fits.fft
+│   ├── J0534+2200_2026_09_02_06_50_36_type_0.dada_intensity.fits.inf
+│   ├── J0534+2200_61285_02_09_26_profile.fits
+│   ├── J0534+2200_61285_02_09_26_profile.png
+│   ├── J0534+2200_61285.06_175MHz_type_0_GBD_DART.fits
+│   ├── J0534+2200_61285.06_175MHz_type_0_GBD_DART.fits_cleaned.ar
+│   ├── J0534+2200_61285.06_175MHz_type_0_GBD_DART.fits_cleaned.ar.ps
+│   ├── J0534+2200_61285.06_175MHz_type_0_GBD_DART.fits_cleaned.ar.ps.pdf
+│   ├── J0534+2200_61285.06_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits
+│   ├── J0534+2200_61285.06_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits_cleaned.ar
+│   ├── J0534+2200_61285.06_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits_cleaned.ar.ps
+│   ├── J0534+2200_61285.06_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits_cleaned.ar.ps.pdf
+│   ├── J0534+2200_61285.06873_02_09_2026_profile.fits
+│   ├── J0534+2200_61285.06873_02_09_2026_profile.png
+│   ├── J0534+2200_rfifind.bytemask
+│   ├── J0534+2200_rfifind.inf
+│   ├── J0534+2200_rfifind.mask
+│   ├── J0534+2200_rfifind.ps
+│   ├── J0534+2200_rfifind.rfi
+│   ├── J0534+2200_rfifind.stats
+│   ├── metadata.json
+│   ├── pdmp.per
+│   └── pdmp.posn
+J0837+0610
+├── 01_09_2026
+│   ├── clean.log
+│   ├── J0837+0610_2026_09_01_09_56_37_type_0.dada_intensity.fits_ACCEL_8
+│   ├── J0837+0610_2026_09_01_09_56_37_type_0.dada_intensity.fits_ACCEL_8.cand
+│   ├── J0837+0610_2026_09_01_09_56_37_type_0.dada_intensity.fits_ACCEL_8.txtcand
+│   ├── J0837+0610_2026_09_01_09_56_37_type_0.dada_intensity.fits.dat
+│   ├── J0837+0610_2026_09_01_09_56_37_type_0.dada_intensity.fits.fft
+│   ├── J0837+0610_2026_09_01_09_56_37_type_0.dada_intensity.fits.inf
+│   ├── J0837+0610_61284_01_09_26_profile.fits
+│   ├── J0837+0610_61284_01_09_26_profile.png
+│   ├── J0837+0610_61284.19_175MHz_type_0_GBD_DART.fits
+│   ├── J0837+0610_61284.19_175MHz_type_0_GBD_DART.fits_cleaned.ar
+│   ├── J0837+0610_61284.19_175MHz_type_0_GBD_DART.fits_cleaned.ar.ps
+│   ├── J0837+0610_61284.19_175MHz_type_0_GBD_DART.fits_cleaned.ar.ps.pdf
+│   ├── J0837+0610_61284.19_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits
+│   ├── J0837+0610_61284.19_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits_cleaned.ar
+│   ├── J0837+0610_61284.19_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits_cleaned.ar.ps
+│   ├── J0837+0610_61284.19_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits_cleaned.ar.ps.pdf
+│   ├── J0837+0610_61284.19438_01_09_2026_profile.fits
+│   ├── J0837+0610_61284.19438_01_09_2026_profile.png
+│   ├── J0837+0610_rfifind.bytemask
+│   ├── J0837+0610_rfifind.inf
+│   ├── J0837+0610_rfifind.mask
+│   ├── J0837+0610_rfifind.ps
+│   ├── J0837+0610_rfifind.rfi
+│   ├── J0837+0610_rfifind.stats
+│   ├── metadata.json
+│   ├── pdmp.per
+│   └── pdmp.posn
+├── 02_09_2026
+│   ├── clean.log
+│   ├── J0837+0610_2026_09_02_09_52_40_type_0.dada_intensity.fits_ACCEL_8
+│   ├── J0837+0610_2026_09_02_09_52_40_type_0.dada_intensity.fits_ACCEL_8.cand
+│   ├── J0837+0610_2026_09_02_09_52_40_type_0.dada_intensity.fits_ACCEL_8.txtcand
+│   ├── J0837+0610_2026_09_02_09_52_40_type_0.dada_intensity.fits.dat
+│   ├── J0837+0610_2026_09_02_09_52_40_type_0.dada_intensity.fits.fft
+│   ├── J0837+0610_2026_09_02_09_52_40_type_0.dada_intensity.fits.inf
+│   ├── J0837+0610_61285_02_09_26_profile.fits
+│   ├── J0837+0610_61285_02_09_26_profile.png
+│   ├── J0837+0610_61285.18_175MHz_type_0_GBD_DART.fits
+│   ├── J0837+0610_61285.18_175MHz_type_0_GBD_DART.fits_cleaned.ar
+│   ├── J0837+0610_61285.18_175MHz_type_0_GBD_DART.fits_cleaned.ar.ps
+│   ├── J0837+0610_61285.18_175MHz_type_0_GBD_DART.fits_cleaned.ar.ps.pdf
+│   ├── J0837+0610_61285.18_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits
+│   ├── J0837+0610_61285.18_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits_cleaned.ar
+│   ├── J0837+0610_61285.18_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits_cleaned.ar.ps
+│   ├── J0837+0610_61285.18_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits_cleaned.ar.ps.pdf
+│   ├── J0837+0610_61285.19169_02_09_2026_profile.fits
+│   ├── J0837+0610_61285.19169_02_09_2026_profile.png
+│   ├── J0837+0610_rfifind.bytemask
+│   ├── J0837+0610_rfifind.inf
+│   ├── J0837+0610_rfifind.mask
+│   ├── J0837+0610_rfifind.ps
+│   ├── J0837+0610_rfifind.rfi
+│   ├── J0837+0610_rfifind.stats
+│   ├── metadata.json
+│   ├── pdmp.per
+│   └── pdmp.posn
+J0953+0755
+├── 01_09_2026
+│   ├── clean.log
+│   ├── J0953+0755_2026_09_01_11_07_41_type_0.dada_intensity.fits
+│   ├── J0953+0755_2026_09_01_11_07_41_type_0.dada_intensity.fits_ACCEL_8
+│   ├── J0953+0755_2026_09_01_11_07_41_type_0.dada_intensity.fits_ACCEL_8.cand
+│   ├── J0953+0755_2026_09_01_11_07_41_type_0.dada_intensity.fits_ACCEL_8.txtcand
+│   ├── J0953+0755_2026_09_01_11_07_41_type_0.dada_intensity.fits.dat
+│   ├── J0953+0755_2026_09_01_11_07_41_type_0.dada_intensity.fits.fft
+│   ├── J0953+0755_2026_09_01_11_07_41_type_0.dada_intensity.fits.inf
+│   ├── J0953+0755_2026_09_01_11_07_41_type_0.dada_stokes.fits
+│   ├── J0953+0755_61284_01_09_26_profile.fits
+│   ├── J0953+0755_61284_01_09_26_profile.png
+│   ├── J0953+0755_61284.23_175MHz_type_0_GBD_DART.fits
+│   ├── J0953+0755_61284.23_175MHz_type_0_GBD_DART.fits_cleaned.ar
+│   ├── J0953+0755_61284.23_175MHz_type_0_GBD_DART.fits_cleaned.ar.ps
+│   ├── J0953+0755_61284.23_175MHz_type_0_GBD_DART.fits_cleaned.ar.ps.pdf
+│   ├── J0953+0755_61284.23_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits
+│   ├── J0953+0755_61284.23_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits_cleaned.ar
+│   ├── J0953+0755_61284.23_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits_cleaned.ar.ps
+│   ├── J0953+0755_61284.23_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits_cleaned.ar.ps.pdf
+│   ├── J0953+0755_61284.24644_01_09_2026_profile.fits
+│   ├── J0953+0755_61284.24644_01_09_2026_profile.png
+│   ├── J0953+0755_rfifind.bytemask
+│   ├── J0953+0755_rfifind.inf
+│   ├── J0953+0755_rfifind.mask
+│   ├── J0953+0755_rfifind.ps
+│   ├── J0953+0755_rfifind.rfi
+│   ├── J0953+0755_rfifind.stats
+│   ├── metadata.json
+│   ├── pdmp.per
+│   └── pdmp.posn
+├── 02_09_2026
+│   ├── clean.log
+│   ├── J0953+0755_2026_09_02_11_03_45_type_0.dada_intensity.fits
+│   ├── J0953+0755_2026_09_02_11_03_45_type_0.dada_intensity.fits_ACCEL_8
+│   ├── J0953+0755_2026_09_02_11_03_45_type_0.dada_intensity.fits_ACCEL_8.cand
+│   ├── J0953+0755_2026_09_02_11_03_45_type_0.dada_intensity.fits_ACCEL_8.txtcand
+│   ├── J0953+0755_2026_09_02_11_03_45_type_0.dada_intensity.fits.dat
+│   ├── J0953+0755_2026_09_02_11_03_45_type_0.dada_intensity.fits.fft
+│   ├── J0953+0755_2026_09_02_11_03_45_type_0.dada_intensity.fits.inf
+│   ├── J0953+0755_2026_09_02_11_03_45_type_0.dada_stokes.fits
+│   ├── J0953+0755_61285_02_09_26_profile.fits
+│   ├── J0953+0755_61285_02_09_26_profile.png
+│   ├── J0953+0755_61285.23_175MHz_type_0_GBD_DART.fits
+│   ├── J0953+0755_61285.23_175MHz_type_0_GBD_DART.fits_cleaned.ar
+│   ├── J0953+0755_61285.23_175MHz_type_0_GBD_DART.fits_cleaned.ar.ps
+│   ├── J0953+0755_61285.23_175MHz_type_0_GBD_DART.fits_cleaned.ar.ps.pdf
+│   ├── J0953+0755_61285.23_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits
+│   ├── J0953+0755_61285.23_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits_cleaned.ar
+│   ├── J0953+0755_61285.23_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits_cleaned.ar.ps
+│   ├── J0953+0755_61285.23_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits_cleaned.ar.ps.pdf
+│   ├── J0953+0755_61285.24372_02_09_2026_profile.fits
+│   ├── J0953+0755_61285.24372_02_09_2026_profile.png
+│   ├── J0953+0755_rfifind.bytemask
+│   ├── J0953+0755_rfifind.inf
+│   ├── J0953+0755_rfifind.mask
+│   ├── J0953+0755_rfifind.ps
+│   ├── J0953+0755_rfifind.rfi
+│   ├── J0953+0755_rfifind.stats
+│   ├── metadata.json
+│   ├── pdmp.per
+│   └── pdmp.posn
+J1136+1551
+├── 01_09_2026
+│   ├── clean.log
+│   ├── J1136+1551_2026_09_01_12_55_16_type_0.dada_intensity.fits
+│   ├── J1136+1551_2026_09_01_12_55_16_type_0.dada_intensity.fits_ACCEL_8
+│   ├── J1136+1551_2026_09_01_12_55_16_type_0.dada_intensity.fits_ACCEL_8.cand
+│   ├── J1136+1551_2026_09_01_12_55_16_type_0.dada_intensity.fits_ACCEL_8.txtcand
+│   ├── J1136+1551_2026_09_01_12_55_16_type_0.dada_intensity.fits.dat
+│   ├── J1136+1551_2026_09_01_12_55_16_type_0.dada_intensity.fits.fft
+│   ├── J1136+1551_2026_09_01_12_55_16_type_0.dada_intensity.fits.inf
+│   ├── J1136+1551_2026_09_01_12_55_16_type_0.dada_stokes.fits
+│   ├── J1136+1551_61284_01_09_26_profile.fits
+│   ├── J1136+1551_61284_01_09_26_profile.png
+│   ├── J1136+1551_61284.31_175MHz_type_0_GBD_DART.fits
+│   ├── J1136+1551_61284.31_175MHz_type_0_GBD_DART.fits_cleaned.ar
+│   ├── J1136+1551_61284.31_175MHz_type_0_GBD_DART.fits_cleaned.ar.ps
+│   ├── J1136+1551_61284.31_175MHz_type_0_GBD_DART.fits_cleaned.ar.ps.pdf
+│   ├── J1136+1551_61284.31_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits
+│   ├── J1136+1551_61284.31_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits_cleaned.ar
+│   ├── J1136+1551_61284.31_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits_cleaned.ar.ps
+│   ├── J1136+1551_61284.31_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits_cleaned.ar.ps.pdf
+│   ├── J1136+1551_61284.31786_01_09_2026_profile.fits
+│   ├── J1136+1551_61284.31786_01_09_2026_profile.png
+│   ├── J1136+1551_rfifind.bytemask
+│   ├── J1136+1551_rfifind.inf
+│   ├── J1136+1551_rfifind.mask
+│   ├── J1136+1551_rfifind.ps
+│   ├── J1136+1551_rfifind.rfi
+│   ├── J1136+1551_rfifind.stats
+│   ├── metadata.json
+│   ├── pdmp.per
+│   └── pdmp.posn
+├── 02_09_2026
+│   ├── clean.log
+│   ├── J1136+1551_2026_09_02_12_51_20_type_0.dada_intensity.fits
+│   ├── J1136+1551_2026_09_02_12_51_20_type_0.dada_intensity.fits_ACCEL_8
+│   ├── J1136+1551_2026_09_02_12_51_20_type_0.dada_intensity.fits_ACCEL_8.cand
+│   ├── J1136+1551_2026_09_02_12_51_20_type_0.dada_intensity.fits_ACCEL_8.txtcand
+│   ├── J1136+1551_2026_09_02_12_51_20_type_0.dada_intensity.fits.dat
+│   ├── J1136+1551_2026_09_02_12_51_20_type_0.dada_intensity.fits.fft
+│   ├── J1136+1551_2026_09_02_12_51_20_type_0.dada_intensity.fits.inf
+│   ├── J1136+1551_2026_09_02_12_51_20_type_0.dada_stokes.fits
+│   ├── J1136+1551_61285_02_09_26_profile.fits
+│   ├── J1136+1551_61285_02_09_26_profile.png
+│   ├── J1136+1551_61285.31_175MHz_type_0_GBD_DART.fits
+│   ├── J1136+1551_61285.31_175MHz_type_0_GBD_DART.fits_cleaned.ar
+│   ├── J1136+1551_61285.31_175MHz_type_0_GBD_DART.fits_cleaned.ar.ps
+│   ├── J1136+1551_61285.31_175MHz_type_0_GBD_DART.fits_cleaned.ar.ps.pdf
+│   ├── J1136+1551_61285.31_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits
+│   ├── J1136+1551_61285.31_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits_cleaned.ar
+│   ├── J1136+1551_61285.31_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits_cleaned.ar.ps
+│   ├── J1136+1551_61285.31_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits_cleaned.ar.ps.pdf
+│   ├── J1136+1551_61285.31511_02_09_2026_profile.fits
+│   ├── J1136+1551_61285.31511_02_09_2026_profile.png
+│   ├── J1136+1551_rfifind.bytemask
+│   ├── J1136+1551_rfifind.inf
+│   ├── J1136+1551_rfifind.mask
+│   ├── J1136+1551_rfifind.ps
+│   ├── J1136+1551_rfifind.rfi
+│   ├── J1136+1551_rfifind.stats
+│   ├── metadata.json
+│   ├── pdmp.per
+│   └── pdmp.posn
+J1921+2153
+├── 01_09_2026
+│   ├── clean.log
+│   ├── J1921+2153_2026_09_01_20_34_19_type_0.dada_intensity.fits
+│   ├── J1921+2153_2026_09_01_20_34_19_type_0.dada_intensity.fits_ACCEL_8
+│   ├── J1921+2153_2026_09_01_20_34_19_type_0.dada_intensity.fits_ACCEL_8.cand
+│   ├── J1921+2153_2026_09_01_20_34_19_type_0.dada_intensity.fits_ACCEL_8.txtcand
+│   ├── J1921+2153_2026_09_01_20_34_19_type_0.dada_intensity.fits.dat
+│   ├── J1921+2153_2026_09_01_20_34_19_type_0.dada_intensity.fits.fft
+│   ├── J1921+2153_2026_09_01_20_34_19_type_0.dada_intensity.fits.inf
+│   ├── J1921+2153_2026_09_01_20_34_19_type_0.dada_stokes.fits
+│   ├── J1921+2153_61284_02_09_26_profile.fits
+│   ├── J1921+2153_61284_02_09_26_profile.png
+│   ├── J1921+2153_61284.63_175MHz_type_0_GBD_DART.fits
+│   ├── J1921+2153_61284.63_175MHz_type_0_GBD_DART.fits_cleaned.ar
+│   ├── J1921+2153_61284.63_175MHz_type_0_GBD_DART.fits_cleaned.ar.ps
+│   ├── J1921+2153_61284.63_175MHz_type_0_GBD_DART.fits_cleaned.ar.ps.pdf
+│   ├── J1921+2153_61284.63_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits
+│   ├── J1921+2153_61284.63_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits_cleaned.ar
+│   ├── J1921+2153_61284.63_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits_cleaned.ar.ps
+│   ├── J1921+2153_61284.63_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits_cleaned.ar.ps.pdf
+│   ├── J1921+2153_61284.64879_01_09_2026_profile.fits
+│   ├── J1921+2153_61284.64879_01_09_2026_profile.png
+│   ├── J1921+2153_rfifind.bytemask
+│   ├── J1921+2153_rfifind.inf
+│   ├── J1921+2153_rfifind.mask
+│   ├── J1921+2153_rfifind.ps
+│   ├── J1921+2153_rfifind.rfi
+│   ├── J1921+2153_rfifind.stats
+│   ├── metadata.json
+│   ├── pdmp.per
+│   └── pdmp.posn
+├── 02_09_2026
+│   ├── clean.log
+│   ├── J1921+2153_2026_09_02_20_30_23_type_0.dada_intensity.fits
+│   ├── J1921+2153_2026_09_02_20_30_23_type_0.dada_intensity.fits_ACCEL_8
+│   ├── J1921+2153_2026_09_02_20_30_23_type_0.dada_intensity.fits_ACCEL_8.cand
+│   ├── J1921+2153_2026_09_02_20_30_23_type_0.dada_intensity.fits_ACCEL_8.txtcand
+│   ├── J1921+2153_2026_09_02_20_30_23_type_0.dada_intensity.fits.dat
+│   ├── J1921+2153_2026_09_02_20_30_23_type_0.dada_intensity.fits.fft
+│   ├── J1921+2153_2026_09_02_20_30_23_type_0.dada_intensity.fits.inf
+│   ├── J1921+2153_2026_09_02_20_30_23_type_0.dada_stokes.fits
+│   ├── J1921+2153_61285_03_09_26_profile.fits
+│   ├── J1921+2153_61285_03_09_26_profile.png
+│   ├── J1921+2153_61285.63_175MHz_type_0_GBD_DART.fits
+│   ├── J1921+2153_61285.63_175MHz_type_0_GBD_DART.fits_cleaned.ar
+│   ├── J1921+2153_61285.63_175MHz_type_0_GBD_DART.fits_cleaned.ar.ps
+│   ├── J1921+2153_61285.63_175MHz_type_0_GBD_DART.fits_cleaned.ar.ps.pdf
+│   ├── J1921+2153_61285.63_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits
+│   ├── J1921+2153_61285.63_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits_cleaned.ar
+│   ├── J1921+2153_61285.63_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits_cleaned.ar.ps
+│   ├── J1921+2153_61285.63_175MHz_type_0_GBD_DART_stokes_Incoherent_DD.fits_cleaned.ar.ps.pdf
+│   ├── J1921+2153_61285.64600_02_09_2026_profile.fits
+│   ├── J1921+2153_61285.64600_02_09_2026_profile.png
+│   ├── J1921+2153_rfifind.bytemask
+│   ├── J1921+2153_rfifind.inf
+│   ├── J1921+2153_rfifind.mask
+│   ├── J1921+2153_rfifind.ps
+│   ├── J1921+2153_rfifind.rfi
+│   ├── J1921+2153_rfifind.stats
+│   ├── metadata.json
+│   ├── pdmp.per
+│   └── pdmp.posn
