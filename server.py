@@ -9,7 +9,7 @@ import zipfile
 import threading
 import json
 
-PORT = 8000
+PORT = int(sys.argv[1]) #8000
 
 # Global visitor tracking variables
 visitor_count = 0
