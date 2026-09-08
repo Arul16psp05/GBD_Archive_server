@@ -1,4 +1,4 @@
-import os, sys
+import os
 import math
 import http.server
 import socketserver
@@ -6,8 +6,14 @@ import urllib.parse
 import html
 import io
 import zipfile
+import threading
+import json
 
-PORT = int(sys.argv[1]) #8000
+PORT = 8000
+
+# Global visitor tracking variables
+visitor_count = 0
+count_lock = threading.Lock()
 
 def format_bytes(size):
     if size == 0:
@@ -27,8 +33,23 @@ class CustomDirectoryHandler(http.server.SimpleHTTPRequestHandler):
             pass
 
     def do_GET(self):
-        """Intercept GET requests to check if a ZIP download is requested."""
+        """Intercept GET requests for ZIP downloads and the visitor API."""
         parsed_path = urllib.parse.urlparse(self.path)
+        
+        # Intercept the visitor counter API call
+        if parsed_path.path == '/api/visitor_count':
+            global visitor_count
+            with count_lock:
+                visitor_count += 1
+                current_count = visitor_count
+            
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.end_headers()
+            self.wfile.write(json.dumps({'count': current_count}).encode('utf-8'))
+            return
+            
+        # Intercept the zip download request
         if parsed_path.query == 'zip=true':
             self.send_zip_folder()
         else:
@@ -43,25 +64,21 @@ class CustomDirectoryHandler(http.server.SimpleHTTPRequestHandler):
             self.send_error(404, "Directory not found")
             return
         
-        # Determine a clean zip filename (e.g., 07_09_2026.zip)
         folder_name = os.path.basename(os.path.normpath(folder_path))
         if not folder_name:
             folder_name = "archive"
         zip_filename = f"{folder_name}.zip"
 
-        # Send HTTP headers for file download
         self.send_response(200)
         self.send_header('Content-Type', 'application/zip')
         self.send_header('Content-Disposition', f'attachment; filename="{zip_filename}"')
         self.end_headers()
 
-        # Stream the zip directly to the client's network socket (wfile)
         try:
             with zipfile.ZipFile(self.wfile, 'w', zipfile.ZIP_DEFLATED) as zf:
                 for root, dirs, files in os.walk(folder_path):
                     for file in files:
                         file_path = os.path.join(root, file)
-                        # Ensure the internal zip structure is relative to the downloaded folder
                         arcname = os.path.relpath(file_path, folder_path)
                         zf.write(file_path, arcname)
         except ConnectionResetError:
@@ -95,10 +112,7 @@ class CustomDirectoryHandler(http.server.SimpleHTTPRequestHandler):
         </style>
         ''')
         r.append('</head><body>')
-        
-        # Inject the Return to Dashboard button
-        r.append('<a href="/" class="back-btn">&larr; Return to Home</a>')
-        
+        r.append('<a href="/" class="back-btn">&larr; Return to Dashboard</a>')
         r.append(f'<h2>Index of {displaypath}</h2>')
         r.append('<table><tr><th>Filename</th><th>Size</th></tr>')
         
@@ -141,5 +155,5 @@ class ThreadedHTTPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     pass
 
 with ThreadedHTTPServer(("", PORT), CustomDirectoryHandler) as httpd:
-    print(f"GBD-DART Custom Threaded Server running at http://localhost:{PORT}")
+    print(f"GBD-DART Data Archive Custom Threaded Server running at http://localhost:{PORT}")
     httpd.serve_forever()
